@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cuda the Pitbull — $Cuda</title>
+  <meta name="description" content="Cuda the Pitbull ($Cuda) — the legendary short-spine dog on Solana. Buy $Cuda, join the pack." />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: "#0c0c0c",
+            soot: "#161616",
+            ash: "#2a2a2a",
+            bone: "#f7f4ef",
+            cream: "#fff8f0",
+            muzzle: "#1a1a1a",
+            patch: "#111111",
+            paw: "#c8a96a",
+            skyeye: "#5eb8e8",
+          },
+          fontFamily: {
+            display: ['Fredoka', 'system-ui', 'sans-serif'],
+            body: ['Nunito', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            chunky: '6px 6px 0 0 #0c0c0c',
+            'chunky-white': '6px 6px 0 0 #ffffff',
+            'chunky-sm': '4px 4px 0 0 #0c0c0c',
+          },
+          animation: {
+            'wiggle': 'wiggle 2.5s ease-in-out infinite',
+            'float': 'float 4s ease-in-out infinite',
+            'bounce-slow': 'bounce-slow 2s ease-in-out infinite',
+            'paw-print': 'paw-print 12s linear infinite',
+          },
+          keyframes: {
+            wiggle: {
+              '0%, 100%': { transform: 'rotate(-2deg)' },
+              '50%': { transform: 'rotate(2deg)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            'bounce-slow': {
+              '0%, 100%': { transform: 'translateY(0) scale(1)' },
+              '50%': { transform: 'translateY(-8px) scale(1.05)' },
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    :root {
+      --ink: #0c0c0c;
+      --bone: #f7f4ef;
+    }
+
+    body {
+      font-family: 'Nunito', system-ui, sans-serif;
+      background: var(--bone);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    .font-display { font-family: 'Fredoka', system-ui, sans-serif; }
+
+    /* Paw-print background texture */
+    .paw-bg {
+      background-color: #f7f4ef;
+      background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%230c0c0c' fill-opacity='0.04'%3E%3Cellipse cx='40' cy='48' rx='10' ry='8'/%3E%3Ccircle cx='28' cy='34' r='5'/%3E%3Ccircle cx='40' cy='28' r='5'/%3E%3Ccircle cx='52' cy='34' r='5'/%3E%3Ccircle cx='22' cy='44' r='4.5'/%3E%3Ccircle cx='58' cy='44' r='4.5'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .dark-paw-bg {
+      background-color: #0c0c0c;
+      background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cellipse cx='40' cy='48' rx='10' ry='8'/%3E%3Ccircle cx='28' cy='34' r='5'/%3E%3Ccircle cx='40' cy='28' r='5'/%3E%3Ccircle cx='52' cy='34' r='5'/%3E%3Ccircle cx='22' cy='44' r='4.5'/%3E%3Ccircle cx='58' cy='44' r='4.5'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* Bone divider */
+    .bone-divider {
+      height: 24px;
+      background: url("data:image/svg+xml,%3Csvg width='120' height='24' viewBox='0 0 120 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 12c0-4 3-7 6-7s5 2 6 4c1-2 3-4 6-4s6 3 6 7-3 7-6 7-5-2-6-4c-1 2-3 4-6 4s-6-3-6-7zm48 0c0-4 3-7 6-7s5 2 6 4c1-2 3-4 6-4s6 3 6 7-3 7-6 7-5-2-6-4c-1 2-3 4-6 4s-6-3-6-7z' fill='%230c0c0c' fill-opacity='0.15'/%3E%3Crect x='32' y='8' width='56' height='8' rx='4' fill='%230c0c0c' fill-opacity='0.15'/%3E%3C/svg%3E") center / auto 100% repeat-x;
+    }
+
+    /* Chunky interactive buttons */
+    .btn-chunky {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-chunky:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 0 #0c0c0c;
+    }
+    .btn-chunky:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 0 #0c0c0c;
+    }
+    .btn-chunky-light:hover {
+      box-shadow: 8px 8px 0 0 #ffffff;
+    }
+    .btn-chunky-light:active {
+      box-shadow: 2px 2px 0 0 #ffffff;
+    }
+
+    /* Paw-print pump particles */
+    .paw-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      width: 28px;
+      height: 28px;
+      will-change: transform, opacity;
+      animation: paw-pump 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+    }
+
+    @keyframes paw-pump {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.2) rotate(var(--rot-start));
+      }
+      25% {
+        opacity: 1;
+        transform: translate(var(--dx1), var(--dy1)) scale(1.4) rotate(var(--rot-mid));
+      }
+      55% {
+        opacity: 1;
+        transform: translate(var(--dx2), var(--dy2)) scale(1) rotate(var(--rot-mid));
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--dx3), var(--dy3)) scale(1.55) rotate(var(--rot-end));
+      }
+    }
+
+    /* Nav glass */
+    .nav-bar {
+      backdrop-filter: blur(12px);
+      background: rgba(247, 244, 239, 0.88);
+      border-bottom: 3px solid #0c0c0c;
+    }
+
+    /* Hero overlay wash for text readability without covering brand image */
+    .hero-fade {
+      background: linear-gradient(
+        90deg,
+        rgba(12, 12, 12, 0.55) 0%,
+        rgba(12, 12, 12, 0.25) 45%,
+        rgba(12, 12, 12, 0.05) 70%,
+        transparent 100%
+      );
+    }
+
+    @media (max-width: 768px) {
+      .hero-fade {
+        background: linear-gradient(
+          180deg,
+          rgba(12, 12, 12, 0.15) 0%,
+          rgba(12, 12, 12, 0.65) 55%,
+          rgba(12, 12, 12, 0.85) 100%
+        );
+      }
+    }
+
+    /* Step number badge */
+    .step-num {
+      font-family: 'Fredoka', system-ui, sans-serif;
+    }
+
+    /* Marquee */
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Logo spin on hover */
+    .logo-spin:hover img {
+      animation: logo-bounce 0.5s ease;
+    }
+    @keyframes logo-bounce {
+      0%, 100% { transform: scale(1) rotate(0); }
+      40% { transform: scale(1.15) rotate(-8deg); }
+      70% { transform: scale(1.1) rotate(6deg); }
+    }
+
+    /* Dex embed frame */
+    .dex-frame {
+      border: 4px solid #0c0c0c;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      background: #0c0c0c;
+      min-height: 460px;
+    }
+    .dex-frame iframe {
+      width: 100%;
+      height: 500px;
+      border: 0;
+    }
+
+    /* Social icons — x.png has dark bg so pad lightly */
+    .social-x {
+      background: #0c0c0c;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    /* Copy toast */
+    #copy-toast {
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    #copy-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Section heading underline paw */
+    .title-paw::after {
+      content: '';
+      display: block;
+      width: 72px;
+      height: 10px;
+      margin: 0.75rem auto 0;
+      background: url("data:image/svg+xml,%3Csvg width='72' height='10' viewBox='0 0 72 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cellipse cx='36' cy='7' rx='6' ry='3' fill='%230c0c0c'/%3E%3Ccircle cx='28' cy='3' r='2.5' fill='%230c0c0c'/%3E%3Ccircle cx='36' cy='2' r='2.5' fill='%230c0c0c'/%3E%3Ccircle cx='44' cy='3' r='2.5' fill='%230c0c0c'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+    .title-paw-light::after {
+      background: url("data:image/svg+xml,%3Csvg width='72' height='10' viewBox='0 0 72 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cellipse cx='36' cy='7' rx='6' ry='3' fill='%23f7f4ef'/%3E%3Ccircle cx='28' cy='3' r='2.5' fill='%23f7f4ef'/%3E%3Ccircle cx='36' cy='2' r='2.5' fill='%23f7f4ef'/%3E%3Ccircle cx='44' cy='3' r='2.5' fill='%23f7f4ef'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+  </style>
+</head>
+<body class="paw-bg">
+
+  <!-- Toast -->
+  <div id="copy-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 z-[100] pointer-events-none bg-ink text-bone font-display font-semibold px-5 py-3 rounded-2xl border-2 border-bone shadow-chunky-white text-sm tracking-wide">
+    CA copied! Good boy 🦴
+  </div>
+
+  <!-- NAV -->
+  <header class="nav-bar fixed top-0 inset-x-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-3">
+      <a href="#top" class="logo-spin flex items-center gap-2 sm:gap-3 group pump-hover" data-pump>
+        <img src="logo.png" alt="Cuda the Pitbull logo" class="w-11 h-11 sm:w-14 sm:h-14 rounded-full border-[3px] border-ink object-cover shadow-chunky-sm bg-bone" />
+        <div class="leading-tight">
+          <span class="font-display font-bold text-lg sm:text-xl tracking-tight block">Cuda</span>
+          <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-ash">the Pitbull</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-1 font-display font-semibold text-sm">
+        <a href="#about" class="px-3 py-2 rounded-xl hover:bg-ink hover:text-bone transition-colors pump-hover" data-pump>About</a>
+        <a href="#howtobuy" class="px-3 py-2 rounded-xl hover:bg-ink hover:text-bone transition-colors pump-hover" data-pump>How to Buy</a>
+        <a href="#chart" class="px-3 py-2 rounded-xl hover:bg-ink hover:text-bone transition-colors pump-hover" data-pump>Chart</a>
+        <a href="#community" class="px-3 py-2 rounded-xl hover:bg-ink hover:text-bone transition-colors pump-hover" data-pump>Pack</a>
+      </nav>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="https://t.me/CudaPitbull" target="_blank" rel="noopener noreferrer" class="pump-hover w-10 h-10 sm:w-11 sm:h-11 rounded-full border-[3px] border-ink overflow-hidden shadow-chunky-sm hover:scale-110 transition-transform" data-pump aria-label="Telegram">
+          <img src="tg.png" alt="Telegram" class="w-full h-full object-cover" />
+        </a>
+        <a href="https://x.com/CudaPitbull" target="_blank" rel="noopener noreferrer" class="pump-hover social-x w-10 h-10 sm:w-11 sm:h-11 border-[3px] border-ink shadow-chunky-sm hover:scale-110 transition-transform flex items-center justify-center" data-pump aria-label="X / Twitter">
+          <img src="x.png" alt="X" class="w-full h-full object-cover" />
+        </a>
+        <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA" target="_blank" rel="noopener noreferrer" class="btn-chunky pump-hover hidden sm:inline-flex items-center gap-1.5 bg-ink text-bone font-display font-bold text-sm px-4 py-2.5 rounded-2xl border-[3px] border-ink shadow-chunky-sm" data-pump>
+          Buy $Cuda
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO — full-bleed banner -->
+  <section id="top" class="relative min-h-[100svh] pt-16 sm:pt-20 flex items-end md:items-center overflow-hidden">
+    <img
+      src="banner.png"
+      alt="Cuda the Pitbull banner"
+      class="absolute inset-0 w-full h-full object-cover object-center"
+    />
+    <div class="absolute inset-0 hero-fade"></div>
+
+    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-16 sm:pb-20 md:pb-24 pt-10">
+      <div class="max-w-xl text-bone">
+        <p class="font-display font-semibold text-skyeye tracking-widest uppercase text-xs sm:text-sm mb-3 animate-bounce-slow inline-flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-skyeye"></span>
+          Solana Meme Legend
+        </p>
+        <h1 class="font-display font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight drop-shadow-[4px_4px_0_rgba(0,0,0,0.45)]">
+          Cuda<br /><span class="text-bone/90">the Pitbull</span>
+        </h1>
+        <p class="mt-4 sm:mt-5 text-base sm:text-lg font-bold text-bone/90 max-w-md leading-relaxed">
+          Short spine. Big bark. The rarest dog on Solana — ticker <span class="text-skyeye">$Cuda</span>.
+        </p>
+
+        <div class="mt-7 sm:mt-8 flex flex-wrap items-center gap-3">
+          <a
+            href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-chunky btn-chunky-light pump-hover inline-flex items-center gap-2 bg-bone text-ink font-display font-bold text-base sm:text-lg px-6 py-3.5 rounded-2xl border-[3px] border-bone shadow-chunky-white"
+            data-pump
+          >
+            <span aria-hidden="true">💸</span> Buy Now
+          </a>
+          <a
+            href="https://dexscreener.com/solana/TBA"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-chunky pump-hover inline-flex items-center gap-2 bg-transparent text-bone font-display font-bold text-base sm:text-lg px-6 py-3.5 rounded-2xl border-[3px] border-bone hover:bg-bone hover:text-ink transition-colors"
+            data-pump
+          >
+            <span aria-hidden="true">📈</span> Chart
+          </a>
+        </div>
+
+        <!-- CA copy -->
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            id="copy-ca"
+            class="btn-chunky pump-hover group inline-flex items-center gap-2 bg-ink/80 backdrop-blur text-bone font-body font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl border-2 border-bone/40 hover:border-bone max-w-full"
+            data-pump
+            data-ca="TBA"
+            aria-label="Copy contract address"
+          >
+            <span class="uppercase tracking-wider text-bone/60 text-[10px] sm:text-xs shrink-0">CA</span>
+            <span id="ca-display" class="font-mono truncate max-w-[180px] sm:max-w-[260px]">TBA</span>
+            <svg class="w-4 h-4 shrink-0 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15V5a2 2 0 012-2h10" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ticker marquee -->
+  <div class="bg-ink text-bone border-y-[3px] border-ink overflow-hidden py-3" aria-hidden="true">
+    <div class="marquee-track font-display font-bold text-sm sm:text-base tracking-wide uppercase">
+      <span class="px-6">🦴 $Cuda</span>
+      <span class="px-6">🐾 Short Spine, Long Bags</span>
+      <span class="px-6">🦴 Cuda the Pitbull</span>
+      <span class="px-6">🐾 Rare Dog Energy</span>
+      <span class="px-6">🦴 Buy $Cuda on Solana</span>
+      <span class="px-6">🐾 From Couch to Moon</span>
+      <span class="px-6">🦴 $Cuda</span>
+      <span class="px-6">🐾 Short Spine, Long Bags</span>
+      <span class="px-6">🦴 Cuda the Pitbull</span>
+      <span class="px-6">🐾 Rare Dog Energy</span>
+      <span class="px-6">🦴 Buy $Cuda on Solana</span>
+      <span class="px-6">🐾 From Couch to Moon</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about" class="relative py-20 sm:py-28">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12 sm:mb-16">
+        <h2 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl title-paw">Meet Cuda</h2>
+        <p class="mt-4 text-ash font-bold max-w-xl mx-auto">The original short-spine icon — now barking on-chain.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+        <div class="relative pump-hover" data-pump>
+          <div class="absolute -inset-3 bg-ink rounded-[2rem] rotate-[-2deg]"></div>
+          <img
+            src="about.png"
+            alt="Cuda the Pitbull — real photo"
+            class="relative w-full rounded-[1.75rem] border-[4px] border-ink object-cover shadow-chunky animate-float"
+          />
+          <div class="absolute -bottom-4 -right-2 sm:-right-4 bg-skyeye text-ink font-display font-bold text-sm px-4 py-2 rounded-2xl border-[3px] border-ink shadow-chunky-sm rotate-3">
+            One of a kind 🐶
+          </div>
+        </div>
+
+        <div class="space-y-5">
+          <h3 class="font-display font-bold text-2xl sm:text-3xl leading-snug">
+            Short spine.<br />Unstoppable spirit.
+          </h3>
+          <p class="text-base sm:text-lg font-semibold text-ash leading-relaxed">
+            <strong class="text-ink">Cuda</strong> is one of the earliest well-known dogs with
+            <em class="text-ink not-italic font-extrabold">Short Spine Syndrome</em>, a rare congenital
+            condition that shortens and compresses the spine.
+          </p>
+          <p class="text-base sm:text-lg font-semibold text-ash leading-relaxed">
+            That compact frame made Cuda a legend offline — and now <span class="text-ink font-extrabold">$Cuda</span>
+            brings that same rare energy to Solana. Tough underbite. Big heart. Zero neck. Infinite vibes.
+          </p>
+
+          <ul class="grid grid-cols-2 gap-3 pt-2">
+            <li class="bg-ink text-bone rounded-2xl border-[3px] border-ink p-4 pump-hover" data-pump>
+              <span class="font-display font-bold text-2xl block">$Cuda</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-bone/60">Ticker</span>
+            </li>
+            <li class="bg-bone text-ink rounded-2xl border-[3px] border-ink p-4 shadow-chunky-sm pump-hover" data-pump>
+              <span class="font-display font-bold text-2xl block">Solana</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-ash">Chain</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bone-divider mx-auto max-w-4xl opacity-80" aria-hidden="true"></div>
+
+  <!-- HOW TO BUY -->
+  <section id="howtobuy" class="dark-paw-bg text-bone py-20 sm:py-28 border-y-[3px] border-ink">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12 sm:mb-16">
+        <h2 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl title-paw title-paw-light">How to Buy</h2>
+        <p class="mt-4 text-bone/70 font-bold max-w-xl mx-auto">Four easy steps to fetch your $Cuda on Solana.</p>
+      </div>
+
+      <ol class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        <!-- Step 1 -->
+        <li class="relative bg-bone text-ink rounded-[1.5rem] border-[4px] border-bone p-6 shadow-chunky-white pump-hover group" data-pump>
+          <span class="step-num absolute -top-4 -left-2 w-12 h-12 flex items-center justify-center bg-skyeye text-ink font-bold text-xl rounded-2xl border-[3px] border-ink shadow-chunky-sm group-hover:rotate-[-8deg] transition-transform">1</span>
+          <div class="mt-4 mb-3 text-3xl" aria-hidden="true">👛</div>
+          <h3 class="font-display font-bold text-xl mb-2">Get a Wallet</h3>
+          <p class="text-sm font-bold text-ash leading-relaxed">
+            Download Phantom or Solflare. Create a Solana wallet and keep your seed phrase safe — like a good bone.
+          </p>
+        </li>
+
+        <!-- Step 2 -->
+        <li class="relative bg-bone text-ink rounded-[1.5rem] border-[4px] border-bone p-6 shadow-chunky-white pump-hover group" data-pump>
+          <span class="step-num absolute -top-4 -left-2 w-12 h-12 flex items-center justify-center bg-skyeye text-ink font-bold text-xl rounded-2xl border-[3px] border-ink shadow-chunky-sm group-hover:rotate-[-8deg] transition-transform">2</span>
+          <div class="mt-4 mb-3 text-3xl" aria-hidden="true">◎</div>
+          <h3 class="font-display font-bold text-xl mb-2">Add SOL</h3>
+          <p class="text-sm font-bold text-ash leading-relaxed">
+            Buy SOL on an exchange, then send it to your wallet. You’ll need SOL for the swap and network fees.
+          </p>
+        </li>
+
+        <!-- Step 3 -->
+        <li class="relative bg-bone text-ink rounded-[1.5rem] border-[4px] border-bone p-6 shadow-chunky-white pump-hover group" data-pump>
+          <span class="step-num absolute -top-4 -left-2 w-12 h-12 flex items-center justify-center bg-skyeye text-ink font-bold text-xl rounded-2xl border-[3px] border-ink shadow-chunky-sm group-hover:rotate-[-8deg] transition-transform">3</span>
+          <div class="mt-4 mb-3 text-3xl" aria-hidden="true">🔄</div>
+          <h3 class="font-display font-bold text-xl mb-2">Open Pump Swap</h3>
+          <p class="text-sm font-bold text-ash leading-relaxed">
+            Hit <strong>Buy Now</strong> to open pump.fun swap with SOL → $Cuda prefilled. Connect your wallet.
+          </p>
+        </li>
+
+        <!-- Step 4 -->
+        <li class="relative bg-bone text-ink rounded-[1.5rem] border-[4px] border-bone p-6 shadow-chunky-white pump-hover group" data-pump>
+          <span class="step-num absolute -top-4 -left-2 w-12 h-12 flex items-center justify-center bg-skyeye text-ink font-bold text-xl rounded-2xl border-[3px] border-ink shadow-chunky-sm group-hover:rotate-[-8deg] transition-transform">4</span>
+          <div class="mt-4 mb-3 text-3xl" aria-hidden="true">🚀</div>
+          <h3 class="font-display font-bold text-xl mb-2">Swap for $Cuda</h3>
+          <p class="text-sm font-bold text-ash leading-relaxed">
+            Confirm the swap, welcome to the pack, and watch the chart — short spine, long potential.
+          </p>
+        </li>
+      </ol>
+
+      <div class="mt-12 flex flex-wrap justify-center gap-3">
+        <a
+          href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-chunky btn-chunky-light pump-hover inline-flex items-center gap-2 bg-skyeye text-ink font-display font-bold text-lg px-8 py-4 rounded-2xl border-[3px] border-bone shadow-chunky-white"
+          data-pump
+        >
+          Buy Now on Pump
+        </a>
+        <a
+          href="https://dexscreener.com/solana/TBA"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-chunky pump-hover inline-flex items-center gap-2 bg-transparent text-bone font-display font-bold text-lg px-8 py-4 rounded-2xl border-[3px] border-bone hover:bg-bone hover:text-ink transition-colors"
+          data-pump
+        >
+          View Chart
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHART / DEX -->
+  <section id="chart" class="py-20 sm:py-28">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-10 sm:mb-14">
+        <h2 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl title-paw">Live Chart</h2>
+        <p class="mt-4 text-ash font-bold max-w-xl mx-auto">Track $Cuda on DexScreener — refresh when CA goes live.</p>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-3 mb-8">
+        <button
+          type="button"
+          id="copy-ca-chart"
+          class="btn-chunky pump-hover inline-flex items-center gap-2 bg-ink text-bone font-display font-bold text-sm px-5 py-3 rounded-2xl border-[3px] border-ink shadow-chunky-sm"
+          data-pump
+          data-ca="TBA"
+        >
+          Copy CA: TBA
+        </button>
+        <a
+          href="https://dexscreener.com/solana/TBA"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-chunky pump-hover inline-flex items-center gap-2 bg-bone text-ink font-display font-bold text-sm px-5 py-3 rounded-2xl border-[3px] border-ink shadow-chunky-sm"
+          data-pump
+        >
+          Open DexScreener ↗
+        </a>
+      </div>
+
+      <div class="dex-frame shadow-chunky pump-hover" data-pump>
+        <iframe
+          title="DexScreener $Cuda chart"
+          src="https://dexscreener.com/solana/TBA?embed=1&theme=dark&trades=0&info=0"
+          allow="clipboard-write"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section id="community" class="dark-paw-bg text-bone py-20 sm:py-24 border-t-[3px] border-ink">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center">
+      <h2 class="font-display font-bold text-4xl sm:text-5xl title-paw title-paw-light">Join the Pack</h2>
+      <p class="mt-4 text-bone/70 font-bold max-w-lg mx-auto mb-10">
+        Howl with us on Telegram &amp; X. Cuda’s pack never sleeps.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-6 sm:gap-10">
+        <a
+          href="https://t.me/CudaPitbull"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="pump-hover group flex flex-col items-center gap-3"
+          data-pump
+        >
+          <span class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-[4px] border-bone overflow-hidden shadow-chunky-white group-hover:scale-110 group-hover:-rotate-6 transition-transform">
+            <img src="tg.png" alt="Telegram" class="w-full h-full object-cover" />
+          </span>
+          <span class="font-display font-bold text-lg">Telegram</span>
+        </a>
+
+        <a
+          href="https://x.com/CudaPitbull"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="pump-hover group flex flex-col items-center gap-3"
+          data-pump
+        >
+          <span class="social-x w-24 h-24 sm:w-28 sm:h-28 border-[4px] border-bone shadow-chunky-white group-hover:scale-110 group-hover:rotate-6 transition-transform flex items-center justify-center">
+            <img src="x.png" alt="X / Twitter" class="w-full h-full object-cover" />
+          </span>
+          <span class="font-display font-bold text-lg">X / Twitter</span>
+        </a>
+      </div>
+
+      <div class="mt-14 flex flex-wrap justify-center gap-3">
+        <a
+          href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=TBA"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-chunky btn-chunky-light pump-hover inline-flex items-center gap-2 bg-bone text-ink font-display font-bold text-lg px-8 py-4 rounded-2xl border-[3px] border-bone shadow-chunky-white"
+          data-pump
+        >
+          Buy $Cuda Now
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-ink text-bone/50 border-t-[3px] border-ash py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div class="flex items-center gap-3">
+        <img src="logo.png" alt="" class="w-10 h-10 rounded-full border-2 border-bone/30 object-cover" />
+        <div>
+          <p class="font-display font-bold text-bone text-sm">Cuda the Pitbull</p>
+          <p class="text-xs font-bold">$Cuda · Solana</p>
+        </div>
+      </div>
+      <p class="text-xs font-bold max-w-md leading-relaxed">
+        $Cuda is a meme token for entertainment. Not financial advice. DYOR. Cuda is a real legend — trade at your own risk.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const CA = 'TBA';
+
+      // Copy CA
+      function copyCA(btn) {
+        const value = (btn && btn.dataset.ca) || CA;
+        const done = () => {
+          const toast = document.getElementById('copy-toast');
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 1800);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(value).then(done).catch(() => {
+            fallbackCopy(value);
+            done();
+          });
+        } else {
+          fallbackCopy(value);
+          done();
+        }
+      }
+
+      function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+
+      document.getElementById('copy-ca')?.addEventListener('click', function () { copyCA(this); });
+      document.getElementById('copy-ca-chart')?.addEventListener('click', function () { copyCA(this); });
+
+      // Paw-print pump: spawn 3 dog footprints near cursor on hover
+      const pawSVG = encodeURIComponent(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+          <ellipse cx="32" cy="42" rx="14" ry="12" fill="#ffffff"/>
+          <circle cx="16" cy="24" r="7" fill="#ffffff"/>
+          <circle cx="28" cy="16" r="7.5" fill="#ffffff"/>
+          <circle cx="42" cy="16" r="7.5" fill="#ffffff"/>
+          <circle cx="52" cy="24" r="7" fill="#ffffff"/>
+        </svg>`
+      );
+      const pawSrc = `data:image/svg+xml,${pawSVG}`;
+
+      let lastPump = 0;
+      const PUMP_COOLDOWN = 280;
+
+      function spawnPaws(clientX, clientY) {
+        const now = Date.now();
+        if (now - lastPump < PUMP_COOLDOWN) return;
+        lastPump = now;
+
+        const offsets = [
+          { dx1: -30, dy1: -38, dx2: -52, dy2: -72, dx3: -68, dy3: -115, rs: '-25deg', rm: '-12deg', re: '-5deg' },
+          { dx1: 0, dy1: -52, dx2: 6, dy2: -92, dx3: 0, dy3: -135, rs: '8deg', rm: '0deg', re: '-8deg' },
+          { dx1: 30, dy1: -38, dx2: 52, dy2: -72, dx3: 68, dy3: -115, rs: '25deg', rm: '12deg', re: '5deg' },
+        ];
+
+        offsets.forEach((o, i) => {
+          const el = document.createElement('img');
+          el.src = pawSrc;
+          el.alt = '';
+          el.className = 'paw-particle';
+          el.style.left = clientX - 14 + (i - 1) * 8 + 'px';
+          el.style.top = clientY - 14 + 'px';
+          el.style.setProperty('--dx1', o.dx1 + 'px');
+          el.style.setProperty('--dy1', o.dy1 + 'px');
+          el.style.setProperty('--dx2', o.dx2 + 'px');
+          el.style.setProperty('--dy2', o.dy2 + 'px');
+          el.style.setProperty('--dx3', o.dx3 + 'px');
+          el.style.setProperty('--dy3', o.dy3 + 'px');
+          el.style.setProperty('--rot-start', o.rs);
+          el.style.setProperty('--rot-mid', o.rm);
+          el.style.setProperty('--rot-end', o.re);
+          el.style.animationDelay = i * 0.05 + 's';
+          document.body.appendChild(el);
+          el.addEventListener('animationend', () => el.remove());
+        });
+      }
+
+      document.querySelectorAll('[data-pump]').forEach((el) => {
+        el.addEventListener('mouseenter', (e) => {
+          spawnPaws(e.clientX, e.clientY);
+        });
+        el.addEventListener('mousemove', (e) => {
+          if (Math.random() > 0.92) spawnPaws(e.clientX, e.clientY);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
